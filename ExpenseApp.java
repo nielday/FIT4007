@@ -14,16 +14,6 @@ public class ExpenseApp extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Quản lý chi tiêu cá nhân");
 
-        // Text fields
-        TextField categoryInput = new TextField();
-        categoryInput.setPromptText("Danh mục");
-
-        TextField amountInput = new TextField();
-        amountInput.setPromptText("Số tiền");
-
-        TextField dateInput = new TextField();
-        dateInput.setPromptText("Ngày (YYYY-MM-DD)");
-
         // TextField cho tháng và ngân sách
         TextField monthInput = new TextField();
         monthInput.setPromptText("Tháng (1-12)");
