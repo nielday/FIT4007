@@ -52,7 +52,10 @@ public class ExpenseManager {
                 .filter(expense -> expense.getCategory().equalsIgnoreCase(category))
                 .collect(Collectors.toList());
     }
-
+    // Lấy tất cả các khoản chi tiêu
+    public List<Expense> getAllExpenses() {
+        return expenses;
+    }
 
     // Lưu dữ liệu chi tiêu vào file
     public void saveToFile() {
