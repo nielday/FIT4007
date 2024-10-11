@@ -64,11 +64,15 @@ public class ExpenseManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                double amount = Double.parseDouble(data[0]);
-                String category = data[1];
-                String description = data[2];
-                LocalDate date = LocalDate.parse(data[3]);
-                expenses.add(new Expense(amount, category, description, date));
+                if (data.length == 4) {  // Kiểm tra chiều dài mảng
+                    double amount = Double.parseDouble(data[0]);
+                    String category = data[1];
+                    String description = data[2];
+                    LocalDate date = LocalDate.parse(data[3]);
+                    expenses.add(new Expense(amount, category, description, date));
+                } else {
+                    System.out.println("Dòng dữ liệu không đúng định dạng: " + line);
+                }
             }
         } catch (IOException e) {
             System.out.println("Lỗi khi đọc dữ liệu từ tệp: " + e.getMessage());
