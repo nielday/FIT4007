@@ -5,87 +5,98 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ExpenseManager {
-    private List<Expense> expenses;  // Danh sách các khoản chi tiêu
-    private final String filePath = "expenses.txt";  // Đường dẫn tệp lưu chi tiêu
+    private List<Expense> expenses;
+    private String filePath;
 
-    public ExpenseManager() {
-        expenses = new ArrayList<>();
-        loadFromFile();  // Đọc dữ liệu từ file khi khởi động
+    public ExpenseManager(String filePath) {
+        this.expenses = new ArrayList<>();
+        this.filePath = filePath;
     }
 
-    // Thêm khoản chi
+    // 1. Thêm khoản chi
     public void addExpense(Expense expense) {
         expenses.add(expense);
-        saveToFile();  // Lưu dữ liệu sau khi thêm khoản chi mới
     }
 
-    // Xóa khoản chi theo chỉ số
-    public void removeExpense(int index) {
+    // 2. Xóa khoản chi
+    public void deleteExpense(int index) {
         if (index >= 0 && index < expenses.size()) {
             expenses.remove(index);
-            saveToFile();  // Lưu lại danh sách sau khi xóa
         } else {
-            System.out.println("Không tìm thấy khoản chi với chỉ số này.");
+            System.out.println("Khoản chi không hợp lệ!");
         }
     }
 
-    // Tính tổng chi tiêu cho một tháng cụ thể
-    public double getTotalExpensesForMonth(int month, int year) {
+    // 3. Xem tổng chi tiêu tháng
+    public double getTotalExpenseByMonth(int month, int year) {
         return expenses.stream()
                 .filter(expense -> expense.getDate().getMonthValue() == month && expense.getDate().getYear() == year)
                 .mapToDouble(Expense::getAmount)
                 .sum();
     }
 
-    // Chỉnh sửa khoản chi
-    public void editExpense(int index, Expense updatedExpense) {
-        if (index >= 0 && index < expenses.size()) {
-            expenses.set(index, updatedExpense);
-            saveToFile();  // Lưu lại danh sách sau khi chỉnh sửa
-        } else {
-            System.out.println("Không tìm thấy khoản chi với chỉ số này.");
-        }
-    }
-    // Lọc chi tiêu theo loại
-    public List<Expense> getExpensesByCategory(String category) {
-        return expenses.stream()
+    // 4. Xem chi tiêu theo loại
+    public void displayExpensesByCategory(String category) {
+        List<Expense> filteredExpenses = expenses.stream()
                 .filter(expense -> expense.getCategory().equalsIgnoreCase(category))
                 .collect(Collectors.toList());
-    }
-    // Lấy tất cả các khoản chi tiêu
-    public List<Expense> getAllExpenses() {
-        return expenses;
-    }
 
-    // Lưu dữ liệu chi tiêu vào file
-    public void saveToFile() {
-        try (FileWriter writer = new FileWriter(filePath)) {
-            for (Expense expense : expenses) {
-                writer.write(expense.getAmount() + "," + expense.getCategory() + "," + expense.getDescription() + "," + expense.getDate() + "\n");
-            }
-        } catch (IOException e) {
-            System.out.println("Lỗi khi lưu dữ liệu vào tệp: " + e.getMessage());
+        if (filteredExpenses.isEmpty()) {
+            System.out.println("Không có khoản chi nào thuộc loại: " + category);
+        } else {
+            filteredExpenses.forEach(expense -> System.out.println(expense.display()));
         }
     }
 
-    // Đọc dữ liệu chi tiêu từ file
+    // 5. Xem tất cả các khoản chi
+    public void displayAllExpenses() {
+        if (expenses.isEmpty()) {
+            System.out.println("Không có khoản chi nào.");
+        } else {
+            expenses.forEach(expense -> System.out.println(expense.display()));
+        }
+    }
+
+    // 6. Lưu dữ liệu vào tệp TXT
+    public void saveToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            for (Expense expense : expenses) {
+                writer.write(expense.toString());
+                writer.newLine();
+            }
+            System.out.println("Dữ liệu đã được lưu vào file.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 7. Đọc dữ liệu từ tệp TXT
     public void loadFromFile() {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
+            expenses.clear();  // Xóa danh sách cũ trước khi đọc dữ liệu mới
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 4) {  // Kiểm tra chiều dài mảng
-                    double amount = Double.parseDouble(data[0]);
-                    String category = data[1];
-                    String description = data[2];
-                    LocalDate date = LocalDate.parse(data[3]);
-                    expenses.add(new Expense(amount, category, description, date));
-                } else {
-                    System.out.println("Dòng dữ liệu không đúng định dạng: " + line);
-                }
+                double amount = Double.parseDouble(data[0]);
+                String category = data[1];
+                String description = data[2];
+                LocalDate date = LocalDate.parse(data[3]);
+                expenses.add(new Expense(amount, category, description, date));
             }
+            System.out.println("Dữ liệu đã được đọc từ file.");
+            displayAllExpenses();
         } catch (IOException e) {
-            System.out.println("Lỗi khi đọc dữ liệu từ tệp: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // 8. Chỉnh sửa khoản chi
+    public void editExpense(int index, Expense newExpense) {
+        if (index >= 0 && index < expenses.size()) {
+            expenses.set(index, newExpense);
+            System.out.println("Khoản chi đã được chỉnh sửa.");
+        } else {
+            System.out.println("Khoản chi không hợp lệ!");
         }
     }
 }
