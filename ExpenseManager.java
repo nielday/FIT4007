@@ -46,6 +46,13 @@ public class ExpenseManager {
             System.out.println("Không tìm thấy khoản chi với chỉ số này.");
         }
     }
+    // Lọc chi tiêu theo loại
+    public List<Expense> getExpensesByCategory(String category) {
+        return expenses.stream()
+                .filter(expense -> expense.getCategory().equalsIgnoreCase(category))
+                .collect(Collectors.toList());
+    }
+
 
     // Lưu dữ liệu chi tiêu vào file
     public void saveToFile() {
