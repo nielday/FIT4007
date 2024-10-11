@@ -47,7 +47,6 @@ public class ExpenseManager {
         }
     }
 
-
     // Lưu dữ liệu chi tiêu vào file
     public void saveToFile() {
         try (FileWriter writer = new FileWriter(filePath)) {
