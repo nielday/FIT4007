@@ -37,6 +37,17 @@ public class ExpenseManager {
                 .sum();
     }
 
+    // Chỉnh sửa khoản chi
+    public void editExpense(int index, Expense updatedExpense) {
+        if (index >= 0 && index < expenses.size()) {
+            expenses.set(index, updatedExpense);
+            saveToFile();  // Lưu lại danh sách sau khi chỉnh sửa
+        } else {
+            System.out.println("Không tìm thấy khoản chi với chỉ số này.");
+        }
+    }
+
+
     // Lưu dữ liệu chi tiêu vào file
     public void saveToFile() {
         try (FileWriter writer = new FileWriter(filePath)) {
