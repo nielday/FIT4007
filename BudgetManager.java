@@ -7,8 +7,12 @@ public class BudgetManager {
 }
 
 public void setBudgetLimit(double limit) {
-    budgetLimit = limit;
-    System.out.println("Total budget limit set to: " + budgetLimit);
+    if (limit <= 0) {
+        System.out.println("Error: Budget limit must be greater than 0.");
+    } else {
+        budgetLimit = limit;
+        System.out.println("Total budget limit set to: " + budgetLimit);
+    }
 }
 
 public void setCategoryLimit(String category, double limit) {
