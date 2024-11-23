@@ -16,9 +16,13 @@ public void setBudgetLimit(double limit) {
 }
 
 public void setCategoryLimit(String category, double limit) {
+    if (categoryLimits.containsKey(category)) {
+        System.out.println("Warning: Category " + category + " already exists. Overwriting limit.");
+    }
     categoryLimits.put(category, limit);
     System.out.println("Category " + category + " limit set to: " + limit);
 }
+
 
 public void checkBudgetStatus(double totalExpenses) {
     double percentageUsed = (totalExpenses / budgetLimit) * 100;
